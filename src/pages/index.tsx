@@ -43,22 +43,30 @@ const Home: NextPage = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-2">
-      <Pokemon {...data} correct={correct} />
-      <div className="flex items-center gap-5">
-        <input
-          type="text"
-          className={`border-2 p-2 rounded-md`}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-        <button
-          className="text-2xl border-2 rounded-full w-10 h-10"
-          onClick={makeGuess}
-        >
-          &rarr;
-        </button>
-        <button onClick={skipGuess}>Skip</button>
+    <div className="flex flex-col items-center gap-10 h-screen bg-neutral-900 ">
+      <div className="max-w-7xl">
+        <Pokemon {...data} correct={correct} />
+        <div className="flex items-center gap-5">
+          <input
+            type="text"
+            className="border-2 p-2 rounded-md focus:outline-none transition-all focus:ring-2 ring-blue-500"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+          />
+
+          <button
+            className="text-2xl border-2 rounded-full w-10 h-10 text-white focus:outline-none transition-all focus:ring-2 ring-blue-500"
+            onClick={makeGuess}
+          >
+            &rarr;
+          </button>
+          <button
+            className="border-2 p-2 rounded-md text-white focus:outline-none transition-all focus:ring-2 ring-blue-500"
+            onClick={skipGuess}
+          >
+            Skip
+          </button>
+        </div>
       </div>
     </div>
   );
