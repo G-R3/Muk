@@ -69,15 +69,12 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex flex-col items-center gap-10 h-screen bg-neutral-900 ">
-      <div className="max-w-7xl text-white flex flex-col items-center">
+      <div className="max-w-7xl text-white flex flex-col items-center mt-10">
         <Pokemon {...data} correct={correct} />
 
         {TOTAL_ATTEMPTS > totalAttempts ? (
           <div className="animate-fadeIn">
             <div className="flex items-center gap-5 mt-10">
-              <span>
-                Attempts: {totalAttempts}/{TOTAL_ATTEMPTS}
-              </span>
               <input
                 type="text"
                 className="border-2 p-2 rounded-md focus:outline-none transition-all focus:ring-2 ring-blue-500 bg-transparent placeholder:text-gray-600"
@@ -95,12 +92,24 @@ const Home: NextPage = () => {
               </button>
             </div>
             <button
-              className="border-2 p-2 rounded-md focus:outline-none transition-all focus:ring-2 ring-blue-500 w-full mt-5"
+              className={`border-2 p-2 rounded-md focus:outline-none transition-all focus:ring-2 ring-blue-500 w-full mt-5 ${
+                TOTAL_SKIPS <= totalSkips ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               onClick={skipGuess}
               disabled={TOTAL_SKIPS <= totalSkips}
             >
               Skip
             </button>
+            <div className="flex justify-between text-gray-400 mt-2">
+              <span>
+                Attempts: {totalAttempts}/{TOTAL_ATTEMPTS}
+              </span>
+              <span
+                className={`${TOTAL_SKIPS <= totalSkips ? "text-red-400" : ""}`}
+              >
+                Skips: {totalSkips}/{TOTAL_SKIPS}
+              </span>
+            </div>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-5">
