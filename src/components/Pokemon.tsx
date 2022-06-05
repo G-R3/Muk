@@ -23,7 +23,7 @@ export default function Pokemon({
       />
 
       <h1
-        className={`capitalize text-3xl font-medium transition-all ${
+        className={`text-center capitalize text-3xl font-medium transition-all ${
           correct ? "scale-1 my-2" : "scale-0 my-[-0.5rem]"
         }`}
       >
