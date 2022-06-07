@@ -4,30 +4,42 @@ export default function Pokemon({
   id,
   name,
   sprite,
+  description,
+  altName,
   correct,
 }: {
   id: number;
   name: string;
   sprite: string;
+  description: string;
+  altName: string;
   correct: boolean;
 }): JSX.Element {
   return (
     <>
-      <Image
-        key={id}
-        src={sprite}
-        alt={name}
-        width={256}
-        height={256}
-        className="bg-cover animate-fadeIn"
-      />
+      <div className="bg-zinc-800 rounded-md">
+        <Image
+          key={id}
+          src={sprite}
+          alt={name}
+          width={256}
+          height={256}
+          className="bg-cover animate-fadeIn"
+        />
+      </div>
 
       <h1
         className={`text-center capitalize text-3xl font-medium transition-all ${
           correct ? "scale-1 my-2" : "scale-0 my-[-0.5rem]"
         }`}
       >
-        {correct ? name : ""}
+        {correct ? (
+          <span>
+            {name} <br /> {altName}
+          </span>
+        ) : (
+          ""
+        )}
       </h1>
     </>
   );

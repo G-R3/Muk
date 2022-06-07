@@ -56,8 +56,8 @@ const Home: NextPage = () => {
     }
 
     clearInterval(timerRef.current);
-    setCorrect(false);
     refetch();
+    setCorrect(false);
     setTotalSkips((prev) => prev + 1);
   };
 
@@ -113,12 +113,12 @@ const Home: NextPage = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center gap-5">
-            <h1 className="text-red-500 font-bold text-3xl text-center mt-10 animate-fadeIn">
+            <h1 className="select-none text-red-500 font-bold text-3xl text-center mt-10 animate-fadeIn">
               Game Over
             </h1>
             <button
               onClick={restart}
-              className="border-2 rounded-md p-2 focus:outline-none transition-all focus:ring-2 ring-blue-500"
+              className="select-none border-2 rounded-md p-2 focus:outline-none transition-all focus:ring-2 ring-blue-500"
             >
               Restart
             </button>
