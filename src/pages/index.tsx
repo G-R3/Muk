@@ -2,17 +2,21 @@ import type { NextPage } from "next";
 import { trpc } from "../../utils/trpc";
 import { useState, useRef } from "react";
 import Pokemon from "../components/Pokemon";
+import GameControls from "../components/GameControls";
+import GameOver from "../components/GameOver";
 
 const TOTAL_ATTEMPTS = 3;
 const TOTAL_SKIPS = 3;
+const INITIAL_SCORE = 0;
 
 const Home: NextPage = () => {
-  const [value, setValue] = useState<string>("");
   const [correct, setCorrect] = useState<boolean>(false);
   const [totalAttempts, setTotalAttempts] = useState<number>(0);
   const [totalSkips, setTotalSkips] = useState<number>(0);
+  const [score, setScore] = useState<number>(INITIAL_SCORE);
 
   let timerRef = useRef<NodeJS.Timeout>();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { data, error, isLoading, refetch } = trpc.useQuery(["get-pokemon"], {
     refetchOnWindowFocus: false,
@@ -30,17 +34,19 @@ const Home: NextPage = () => {
     );
   }
 
-  const makeGuess = () => {
+  const makeGuess = (value: string) => {
     if (TOTAL_ATTEMPTS <= totalAttempts) {
       return;
     }
 
     if (value.toLocaleLowerCase() === data.name.toLocaleLowerCase()) {
       setCorrect(true);
+      setScore((prevScore: number) => prevScore + 1);
+
+      inputRef.current?.focus();
 
       timerRef.current = setTimeout(() => {
         setCorrect(false);
-        setValue("");
         refetch();
         setTotalAttempts(0);
       }, 1000);
@@ -69,38 +75,20 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex flex-col items-center gap-10 h-screen bg-neutral-900 ">
-      <div className="max-w-7xl text-white flex flex-col items-center mt-10">
+      <div className="max-w-7xl text-white flex flex-col items-center mt-5">
+        <p className="text-3xl font-bold mb-5">Score: {score}</p>
         <Pokemon {...data} correct={correct} />
 
         {TOTAL_ATTEMPTS > totalAttempts ? (
-          <div className="animate-fadeIn">
-            <div className="flex items-center gap-5 mt-10">
-              <input
-                type="text"
-                className="border-2 p-2 rounded-md focus:outline-none transition-all focus:ring-2 ring-blue-500 bg-transparent placeholder:text-gray-600"
-                value={value}
-                placeholder="Guess the mon"
-                onChange={(e) => setValue(e.target.value)}
-              />
-
-              <button
-                className="text-2xl border-2 rounded-md w-10 h-10 focus:outline-none transition-all focus:ring-2 ring-blue-500"
-                onClick={makeGuess}
-                disabled={TOTAL_ATTEMPTS <= totalAttempts}
-              >
-                &rarr;
-              </button>
-            </div>
-            <button
-              className={`border-2 p-2 rounded-md focus:outline-none transition-all focus:ring-2 ring-blue-500 w-full mt-5 ${
-                TOTAL_SKIPS <= totalSkips ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              onClick={skipGuess}
-              disabled={TOTAL_SKIPS <= totalSkips}
-            >
-              Skip
-            </button>
-            <div className="flex justify-between text-gray-400 mt-2">
+          <>
+            <GameControls
+              makeGuess={makeGuess}
+              skipGuess={skipGuess}
+              disableGuessing={TOTAL_ATTEMPTS <= totalAttempts}
+              disableSkipping={TOTAL_SKIPS <= totalSkips}
+              ref={inputRef}
+            />
+            <div className="flex justify-between text-gray-400 mt-2 w-full">
               <span>
                 Attempts: {totalAttempts}/{TOTAL_ATTEMPTS}
               </span>
@@ -110,19 +98,9 @@ const Home: NextPage = () => {
                 Skips: {totalSkips}/{TOTAL_SKIPS}
               </span>
             </div>
-          </div>
+          </>
         ) : (
-          <div className="flex flex-col items-center gap-5">
-            <h1 className="select-none text-red-500 font-bold text-3xl text-center mt-10 animate-fadeIn">
-              Game Over
-            </h1>
-            <button
-              onClick={restart}
-              className="select-none border-2 rounded-md p-2 focus:outline-none transition-all focus:ring-2 ring-blue-500"
-            >
-              Restart
-            </button>
-          </div>
+          <GameOver restart={restart} />
         )}
       </div>
     </div>
