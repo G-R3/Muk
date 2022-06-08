@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Pokemon from "../components/Pokemon";
 import GameControls from "../components/GameControls";
 import GameOver from "../components/GameOver";
+import Head from "next/head";
 
 const TOTAL_ATTEMPTS = 3;
 const TOTAL_SKIPS = 3;
@@ -41,11 +42,11 @@ const Home: NextPage = () => {
       return;
     }
 
+    inputRef.current?.focus();
+
     if (value.toLocaleLowerCase() === data.name.toLocaleLowerCase()) {
       setCorrect(true);
       setScore((prevScore: number) => prevScore + 1);
-
-      inputRef.current?.focus();
 
       timerRef.current = setTimeout(() => {
         setCorrect(false);
@@ -76,36 +77,43 @@ const Home: NextPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-10 h-screen bg-neutral-900 ">
-      <div className="max-w-7xl text-white flex flex-col items-center mt-5">
-        <p className="text-3xl font-bold mb-5">Score: {score}</p>
-        <Pokemon {...data} correct={correct} />
+    <>
+      <Head>
+        <title>Guess the Mon</title>
+      </Head>
+      <div className="flex flex-col items-center gap-10 h-screen">
+        <div className="max-w-7xl flex flex-col items-center mt-5">
+          <p className="text-3xl font-bold mb-5">Score: {score}</p>
+          <Pokemon {...data} correct={correct} />
 
-        {TOTAL_ATTEMPTS > totalAttempts ? (
-          <>
-            <GameControls
-              makeGuess={makeGuess}
-              skipGuess={skipGuess}
-              disableGuessing={TOTAL_ATTEMPTS <= totalAttempts}
-              disableSkipping={TOTAL_SKIPS <= totalSkips}
-              ref={inputRef}
-            />
-            <div className="flex justify-between text-gray-400 mt-2 w-full">
-              <span>
-                Attempts: {totalAttempts}/{TOTAL_ATTEMPTS}
-              </span>
-              <span
-                className={`${TOTAL_SKIPS <= totalSkips ? "text-red-400" : ""}`}
-              >
-                Skips: {totalSkips}/{TOTAL_SKIPS}
-              </span>
-            </div>
-          </>
-        ) : (
-          <GameOver restart={restart} />
-        )}
+          {TOTAL_ATTEMPTS > totalAttempts ? (
+            <>
+              <GameControls
+                makeGuess={makeGuess}
+                skipGuess={skipGuess}
+                disableGuessing={TOTAL_ATTEMPTS <= totalAttempts}
+                disableSkipping={TOTAL_SKIPS <= totalSkips}
+                ref={inputRef}
+              />
+              <div className="flex justify-between text-gray-400 mt-2 w-full">
+                <span>
+                  Attempts: {totalAttempts}/{TOTAL_ATTEMPTS}
+                </span>
+                <span
+                  className={`${
+                    TOTAL_SKIPS <= totalSkips ? "text-red-400" : ""
+                  }`}
+                >
+                  Skips: {totalSkips}/{TOTAL_SKIPS}
+                </span>
+              </div>
+            </>
+          ) : (
+            <GameOver restart={restart} />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
