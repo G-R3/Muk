@@ -1,6 +1,7 @@
 import Image from "next/image";
+import { memo } from "react";
 
-export default function Pokemon({
+const Pokemon = ({
   id,
   name,
   sprite,
@@ -14,10 +15,10 @@ export default function Pokemon({
   description: string;
   altName: string;
   correct: boolean;
-}): JSX.Element {
+}): JSX.Element => {
   return (
     <>
-      <div className="bg-zinc-800 rounded-md">
+      <div className="bg-zinc-800 rounded-md mb-5 sm:p-5">
         <Image
           key={id}
           src={sprite}
@@ -30,7 +31,7 @@ export default function Pokemon({
 
       <h1
         className={`text-center capitalize text-3xl font-medium transition-all ${
-          correct ? "scale-1 my-2" : "scale-0 my-[-0.5rem]"
+          correct ? "scale-1" : "scale-0 my-[-0.5rem]"
         }`}
       >
         {correct ? (
@@ -38,9 +39,11 @@ export default function Pokemon({
             {name} <br /> {altName}
           </span>
         ) : (
-          ""
+          <></>
         )}
       </h1>
     </>
   );
-}
+};
+
+export default memo(Pokemon);
