@@ -10,9 +10,16 @@ datasource db {
 }
 
 model Pokemon {
-  id          Int     @id @default(autoincrement())
-  name        String
-  sprite      String
-  description String?
-  altName     String
+  id           Int           @id @default(autoincrement())
+  name         String
+  sprite       String
+  description  String?
+  altName      String
+  pokemonTypes PokemonType[]
+}
+
+model PokemonType {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  pokemons Pokemon[]
 }
