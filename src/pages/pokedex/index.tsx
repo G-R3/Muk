@@ -1,6 +1,15 @@
 import Head from "next/head";
 import Image from "next/image";
 import { trpc } from "../../../utils/trpc";
+import { typeToColor } from "../../../utils/typeToColor";
+
+interface IPokemon {
+  name: string;
+  url: string;
+  sprites: string;
+  altName: string;
+  types: { id: number; name: string };
+}
 
 const Pokedex = () => {
   const { data, error, isLoading } = trpc.useQuery(["get-all-pokemon"], {
@@ -18,18 +27,30 @@ const Pokedex = () => {
       </Head>
       <h1 className="text-5xl font-bold text-center my-24">Pokedex</h1>
       <div className="flex flex-wrap justify-center gap-5">
-        {data?.pokemon?.map((p: any) => (
-          <div className="flex flex-col items-center" key={p.id}>
-            <div className="bg-zinc-800 rounded-md mb-2 sm:p-5">
+        {data?.pokemon?.map((p) => (
+          <div
+            className="flex flex-col hover:scale-110 transition-transform"
+            key={p.id}
+          >
+            <div
+              className="rounded-md mb-2 sm:p-5"
+              style={{
+                backgroundColor: typeToColor[p.pokemonTypes[0].name],
+              }}
+            >
               <Image
                 src={p.sprite}
                 alt={p.name}
-                width={256}
-                height={256}
+                width={150}
+                height={150}
                 className="bg-cover animate-fadeIn"
               />
             </div>
-            <span>{p.name}</span>
+            <div>
+              <div className="flex justify-between">
+                <h2>{p.name}</h2>
+              </div>
+            </div>
           </div>
         ))}
       </div>
