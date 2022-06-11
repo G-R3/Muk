@@ -44,7 +44,11 @@ export const appRouter = trpc
     async resolve() {
       const prisma = new PrismaClient();
 
-      const pokemon = await prisma.pokemon.findMany();
+      const pokemon = await prisma.pokemon.findMany({
+        include: {
+          pokemonTypes: true,
+        },
+      });
 
       if (!pokemon) {
         throw new trpc.TRPCError({
