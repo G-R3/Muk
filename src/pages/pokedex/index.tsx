@@ -20,12 +20,8 @@ const Pokedex = () => {
       </Head>
       <h1 className="text-5xl font-bold text-center my-24">Pokedex</h1>
       <div className="flex flex-wrap justify-center gap-5">
-        {data?.pokemon?.map((p) => (
-          <Link
-            href={`/pokedex/${encodeURIComponent(p.name)}`}
-            key={p.id}
-            passHref
-          >
+        {data?.pokemon.map((p) => (
+          <Link href={`/pokedex/${encodeURIComponent(p.name)}`} key={p.id}>
             <a>
               <div className="flex flex-col hover:scale-110 transition-transform animate-fadeIn">
                 <div
