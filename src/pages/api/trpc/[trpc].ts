@@ -67,7 +67,7 @@ export const appRouter = trpc
       });
 
       return {
-        ...pokemon,
+        pokemon,
       };
     },
   });
