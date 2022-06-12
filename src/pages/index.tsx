@@ -84,7 +84,7 @@ const Home: NextPage = () => {
       <div className="flex flex-col items-center gap-10 h-screen">
         <div className="max-w-7xl flex flex-col items-center mt-5">
           <p className="text-3xl font-bold mb-5">Score: {score}</p>
-          <Pokemon {...data} correct={correct} />
+          <Pokemon correct={correct} {...data} />
 
           {TOTAL_ATTEMPTS > totalAttempts ? (
             <>
