@@ -1,13 +1,12 @@
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../../../backend/utils/prisma";
 import { z } from "zod";
 
 export const appRouter = trpc
   .router()
   .query("get-pokemon", {
     async resolve() {
-      const prisma = new PrismaClient();
       const id = Math.floor(Math.random() * 151) + 1;
 
       const pokemon = await prisma.pokemon.findUnique({
@@ -35,8 +34,6 @@ export const appRouter = trpc
   })
   .query("get-all-pokemon", {
     async resolve() {
-      const prisma = new PrismaClient();
-
       const pokemon = await prisma.pokemon.findMany({
         include: {
           pokemonTypes: true,
@@ -60,8 +57,6 @@ export const appRouter = trpc
       slug: z.string(),
     }),
     async resolve({ input }) {
-      const prisma = new PrismaClient();
-
       const pokemon = await prisma.pokemon.findUnique({
         where: {
           name: input.slug,

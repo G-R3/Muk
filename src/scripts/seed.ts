@@ -1,26 +1,13 @@
 import { PokemonClient } from "pokenode-ts";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../backend/utils/prisma";
 import { connect } from "http2";
 
-const prisma = new PrismaClient();
 const MAX_POKEMON = 151;
 
 async function main() {
   const pokemonApi = new PokemonClient();
 
   console.log("Seeding database...");
-
-  // const { results } = await pokemonApi.listTypes(0);
-
-  // console.log("Creating types");
-  // for (const type of results) {
-  //   await prisma.pokemonType.create({
-  //     data: {
-  //       typeId: Number(type.url.split("/").slice(-2)[0]),
-  //       name: type.name,
-  //     },
-  //   });
-  // }
 
   console.log("Creating Pokemons");
   for (let i = 1; i <= MAX_POKEMON; i++) {
