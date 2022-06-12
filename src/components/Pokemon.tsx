@@ -26,6 +26,7 @@ const Pokemon = ({
           width={256}
           height={256}
           className="bg-cover animate-fadeIn"
+          priority
         />
       </div>
 

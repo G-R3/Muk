@@ -1,19 +1,12 @@
 import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { PrismaClient } from "@prisma/client";
-
-interface IPokemon {
-  id: number;
-  name: string;
-  sprite: string;
-  description: string;
-  altName: string;
-}
+import { z } from "zod";
 
 export const appRouter = trpc
   .router()
   .query("get-pokemon", {
-    async resolve(): Promise<IPokemon> {
+    async resolve() {
       const prisma = new PrismaClient();
       const id = Math.floor(Math.random() * 151) + 1;
 
@@ -34,8 +27,8 @@ export const appRouter = trpc
       return {
         id: pokemon.id,
         name: pokemon.name,
-        sprite: pokemon.sprite!,
-        description: pokemon.description!,
+        sprite: pokemon.sprite,
+        description: pokemon.description,
         altName: pokemon.altName,
       };
     },
@@ -59,6 +52,27 @@ export const appRouter = trpc
 
       return {
         pokemon,
+      };
+    },
+  })
+  .query("get-pokemon-by-name", {
+    input: z.object({
+      slug: z.string(),
+    }),
+    async resolve({ input }) {
+      const prisma = new PrismaClient();
+
+      const pokemon = await prisma.pokemon.findUnique({
+        where: {
+          name: input.slug,
+        },
+        include: {
+          pokemonTypes: true,
+        },
+      });
+
+      return {
+        ...pokemon,
       };
     },
   });
