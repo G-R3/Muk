@@ -2,12 +2,12 @@ import { Fragment, useEffect } from "react";
 import Head from "next/head";
 import { trpc } from "../../../utils/trpc";
 import { useInView } from "react-intersection-observer";
-import { PokemonCard } from "../../components/PokemonCard";
+import PokemonCard from "../../components/PokemonCard";
 
 const Pokedex = () => {
   const { ref, inView } = useInView();
   const { data, isLoading, error, fetchNextPage, isFetchingNextPage } =
-    trpc.useInfiniteQuery(["get-all-pokemon", { limit: 15 }], {
+    trpc.useInfiniteQuery(["get-all-pokemon", { limit: 14 }], {
       getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
       refetchOnWindowFocus: false,
       refetchInterval: false,
@@ -22,11 +22,11 @@ const Pokedex = () => {
   }, [inView, fetchNextPage]);
 
   if (error) {
-    return <p>Error</p>;
+    return <p className="text-center font-bold text-xl">Error</p>;
   }
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <p className="text-center font-bold text-xl">Loading...</p>;
   }
 
   return (

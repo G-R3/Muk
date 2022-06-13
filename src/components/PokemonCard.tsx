@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { memo } from "react";
 import { typeToColor } from "../../utils/typeToColor";
 
 interface IPokemons {
@@ -11,7 +12,7 @@ interface IPokemons {
   pokemonTypes: { id: number; name: string }[];
 }
 
-export const PokemonCard = ({
+const PokemonCard = ({
   id,
   name,
   sprite,
@@ -45,3 +46,5 @@ export const PokemonCard = ({
     </Link>
   );
 };
+
+export default memo(PokemonCard);
