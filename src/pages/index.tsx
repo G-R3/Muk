@@ -74,6 +74,7 @@ const Home: NextPage = () => {
     setTotalAttempts(0);
     setTotalSkips(0);
     setCorrect(false);
+    setScore(INITIAL_SCORE);
   };
 
   return (

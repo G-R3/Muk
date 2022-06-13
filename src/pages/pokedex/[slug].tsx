@@ -9,11 +9,11 @@ const Pokemon = () => {
   const pokemonQuery = trpc.useQuery(["get-pokemon-by-name", { slug }]);
 
   if (pokemonQuery.error) {
-    return <p>Error</p>;
+    return <p className="text-center font-bold text-xl">Error</p>;
   }
 
   if (pokemonQuery.isLoading || pokemonQuery.status !== "success") {
-    return <p>Loading...</p>;
+    return <p className="text-center font-bold text-xl">Loading...</p>;
   }
 
   const { pokemon } = pokemonQuery.data;
