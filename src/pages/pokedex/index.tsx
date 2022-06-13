@@ -1,20 +1,31 @@
+import { Fragment, useEffect } from "react";
 import Head from "next/head";
 import { trpc } from "../../../utils/trpc";
-import { PokemonList } from "../../components/PokemonList";
+import { useInView } from "react-intersection-observer";
+import { PokemonCard } from "../../components/PokemonCard";
 
 const Pokedex = () => {
-  const { data, error, isLoading } = trpc.useQuery(["get-all-pokemon"], {
-    refetchOnWindowFocus: false,
-    refetchInterval: false,
-    refetchOnReconnect: false,
-    staleTime: 0,
-  });
+  const { ref, inView } = useInView();
+  const { data, isLoading, error, fetchNextPage, isFetchingNextPage } =
+    trpc.useInfiniteQuery(["get-all-pokemon", { limit: 15 }], {
+      getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+      refetchOnWindowFocus: false,
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      staleTime: 0,
+    });
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage]);
 
   if (error) {
     return <p>Error</p>;
   }
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return <p>Loading...</p>;
   }
 
@@ -25,7 +36,18 @@ const Pokedex = () => {
       </Head>
       <h1 className="text-5xl font-bold text-center my-24">Pokedex</h1>
       <div className="flex flex-wrap justify-center gap-5">
-        <PokemonList pokemons={data.pokemon} />
+        {data?.pages.map((page) => (
+          <Fragment key={page.nextCursor}>
+            {page.pokemons.map((pokemon) => (
+              <Fragment key={pokemon.id}>
+                <PokemonCard {...pokemon} />
+              </Fragment>
+            ))}
+          </Fragment>
+        ))}
+      </div>
+      <div ref={ref} className="text-3xl font-bold text-center py-10">
+        {isFetchingNextPage && <p>Loading...</p>}
       </div>
     </>
   );

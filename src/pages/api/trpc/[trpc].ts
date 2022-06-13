@@ -33,22 +33,38 @@ export const appRouter = trpc
     },
   })
   .query("get-all-pokemon", {
-    async resolve() {
-      const pokemon = await prisma.pokemon.findMany({
+    input: z.object({
+      limit: z.number().min(1).max(151).nullish(),
+      cursor: z.number().nullish(),
+    }),
+    async resolve({ input }) {
+      const limit = input.limit ?? 151;
+      const { cursor } = input;
+
+      const pokemons = await prisma.pokemon.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
         include: {
           pokemonTypes: true,
         },
       });
 
-      if (!pokemon) {
+      if (!pokemons) {
         throw new trpc.TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching all pokemon",
         });
       }
 
+      let nextCursor: typeof cursor | null = null;
+      if (pokemons.length > limit) {
+        const nextItem = pokemons.pop();
+        nextCursor = nextItem!.id;
+      }
+
       return {
-        pokemon,
+        pokemons,
+        nextCursor,
       };
     },
   })
