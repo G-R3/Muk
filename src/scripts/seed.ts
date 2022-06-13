@@ -1,6 +1,5 @@
 import { PokemonClient } from "pokenode-ts";
 import { prisma } from "../backend/utils/prisma";
-import { connect } from "http2";
 
 const MAX_POKEMON = 151;
 
@@ -18,13 +17,12 @@ async function main() {
     const description = pokemonSpecies.flavor_text_entries
       .find((mon) => mon.language.name === "en")
       ?.flavor_text.replace(/\f/g, " ");
-    console.log(pokemon.types);
-    // types: [ {type: { name: "grass", url: "..."  }} ]
+
     await prisma.pokemon.create({
       data: {
         name: pokemon.name,
         sprite: sprite,
-        description: description,
+        description: description!,
         altName: pokemonSpecies.names[0].name,
         pokemonTypes: {
           connectOrCreate: pokemon.types.map((type) => ({
