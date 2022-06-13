@@ -20,29 +20,50 @@ const Pokemon = () => {
 
   return (
     <div
-      className="relative"
+      className="max-w-5xl mx-auto px-10 py-3 rounded-md"
       style={{ backgroundColor: typeToColor[pokemon?.pokemonTypes[0].name!] }}
     >
-      <span className="w-max select-none absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem] font-bold">
-        {pokemon?.altName}
-      </span>
-      <div className="max-w-5xl mx-auto flex flex-col items-center">
-        <div className="self-start">
-          <span className="text-lg">
-            #{pokemon?.id.toString().padStart(3, "0")}
-          </span>
-          <h1 className="text-5xl capitalize font-medium">{pokemon?.name}</h1>
-        </div>
+      <section className=" relative animate-fadeIn">
+        <span className="w-max select-none absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem] font-bold">
+          {pokemon?.altName}
+        </span>
+        <div className="flex flex-col items-center">
+          <div className="self-start">
+            <span className="text-lg">
+              #{pokemon?.id.toString().padStart(3, "0")}
+            </span>
+            <h1 className="text-5xl capitalize font-medium">{pokemon?.name}</h1>
+          </div>
 
-        <Image
-          width={550}
-          height={550}
-          src={pokemon?.sprite!}
-          alt={pokemon?.name}
-          className="z-10 select-none"
-          priority
-        />
-      </div>
+          <Image
+            width={500}
+            height={500}
+            src={pokemon?.sprite!}
+            alt={pokemon?.name}
+            className="z-10 select-none"
+            priority
+          />
+        </div>
+      </section>
+      <section className="flex justify-around items-center">
+        <div className="max-w-sm">
+          <h2 className="text-xl font-semibold">Bio</h2>
+          <p>{pokemon?.description}</p>
+        </div>
+        <div className="flex gap-5">
+          {pokemon?.pokemonTypes.map((type) => (
+            <span
+              key={type.id}
+              className="border-2 px-5 rounded-md select-none"
+              style={{
+                backgroundColor: typeToColor[type.name],
+              }}
+            >
+              {type.name}
+            </span>
+          ))}
+        </div>
+      </section>
     </div>
   );
 };
